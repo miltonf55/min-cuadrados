@@ -1,6 +1,7 @@
 import { Component, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -28,6 +29,11 @@ export class AppComponent implements OnChanges{
   constructor() { }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes) {
+      this.lineChartData.datasets[0].data=this.mapAr(this.x, this.y);
+      this.lineChartData.datasets[1].data=this.mapAr(this.x, this.yest);
+      this.chart?.update();
+    }
   }
 
   addP(){
@@ -46,6 +52,9 @@ export class AppComponent implements OnChanges{
     this.x.forEach(xs => {
       this.yest.push(this.m*xs+this.b)
     });
+    this.lineChartData.datasets[0].data=this.mapAr(this.x, this.y);
+    this.lineChartData.datasets[1].data=this.mapAr(this.x, this.yest);
+    this.chart?.update();
   }
   popP(){
     this.x.pop()
@@ -57,6 +66,15 @@ export class AppComponent implements OnChanges{
     this.xysum=this.suma(this.xy);
     this.x2sum=this.suma(this.x2);
     this.n=this.x.length;
+    this.m=((this.n*this.xysum)-(this.xsum*this.ysum))/((this.n*this.x2sum)-(Math.pow(Math.abs(this.xsum), 2)));
+    this.b=((this.ysum*this.x2sum)-(this.xsum*this.xysum))/((this.n*this.x2sum)-(Math.pow(Math.abs(this.xsum), 2)));
+    this.yest=[]
+    this.x.forEach(xs => {
+      this.yest.push(this.m*xs+this.b)
+    });
+    this.lineChartData.datasets[0].data=this.mapAr(this.x, this.y);
+    this.lineChartData.datasets[1].data=this.mapAr(this.x, this.yest);
+    this.chart?.update();
   }
 
   reiniciar(){
@@ -81,30 +99,39 @@ export class AppComponent implements OnChanges{
     return result
   }
 
-  public lineChartData: ChartConfiguration['data'] = {
+  mapAr(xm:number[], ym:number[]):any{
+    let mapead:any=xm.map((xs, i)=> {
+      return {
+        x: xs,
+        y: ym[i],
+        r: 5
+      }
+    });
+    return mapead;
+  }
+
+  lineChartData: ChartConfiguration['data'] = {
     datasets: [
       {
-        data: [ 65, 59, 80, 81, 56, 55, 40 ],
+        data: this.mapAr(this.x, this.y),
         label: 'y',
-        backgroundColor: 'rgba(148,159,177,0.2)',
-        borderColor: 'rgba(148,159,177,1)',
-        pointBackgroundColor: 'rgba(148,159,177,1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(148,159,177,0.8)',
-        fill: 'origin',
+        backgroundColor: [
+          'magenta',
+        ],
+        borderColor: 'magenta',
+        hoverBackgroundColor: 'purple',
+        hoverBorderColor: 'red',
       },
       {
-        data: [ 28, 48, 40, 19, 86, 27, 90 ],
-        label: 'Series B',
-        backgroundColor: 'rgba(77,83,96,0.2)',
-        borderColor: 'rgba(77,83,96,1)',
-        pointBackgroundColor: 'rgba(77,83,96,1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(77,83,96,1)',
-        fill: 'origin',
-      }
-    ],
+        data: this.mapAr(this.x, this.yest),
+        label: 'y estimada',
+        backgroundColor: [
+          'red',
+        ],
+        borderColor: 'red',
+        hoverBackgroundColor: 'purple',
+        hoverBorderColor: 'red',
+      },
+    ]
   };
 }
