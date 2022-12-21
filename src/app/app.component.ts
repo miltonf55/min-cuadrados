@@ -90,6 +90,9 @@ export class AppComponent implements OnChanges{
     this.n=0
     this.b=0
     this.yest=[]
+    this.lineChartData.datasets[0].data=this.mapAr(this.x, this.y);
+    this.lineChartData.datasets[1].data=this.mapAr(this.x, this.yest);
+    this.chart?.update();
   }
 
   suma(e:number[]):number{
