@@ -2,3 +2,28 @@
     text-align: left;
     font-size: large;
 }
+@media only screen and (min-width: 768px){
+    .graph{
+        height: 45vh !important;
+    }
+}
+@media only screen and (max-width: 767px){
+    .graph{
+        height: 100%
+    }
+}
+.rec{
+    font-weight:600;
+}
+.infc{
+    max-height: 50vh !important;
+    overflow-y: auto;
+    scrollbar-width: thin;          /* "auto" or "thin" */
+    scrollbar-color: #adb5bd;   
+}
+.infc::-webkit-scrollbar {
+    width: 8px;               /* width of the entire scrollbar */
+}
+.infc::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.075);    /* color of the scroll thumb */
+}

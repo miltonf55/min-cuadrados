@@ -56,11 +56,11 @@ export class AppComponent implements OnChanges{
     this.lineChartData.datasets[1].data=this.mapAr(this.x, this.yest);
     this.chart?.update();
   }
-  popP(){
-    this.x.pop()
-    this.y.pop()
-    this.xy.pop()
-    this.x2.pop()
+  popP(i:number){
+    this.x.splice(i,1);
+    this.y.splice(i,1);
+    this.xy.splice(i,1);
+    this.x2.splice(i,1);
     this.xsum=this.suma(this.x);
     this.ysum=this.suma(this.y);
     this.xysum=this.suma(this.xy);
